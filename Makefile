@@ -5,7 +5,7 @@ bencc: $(SRCS:%=build/%.o)
 	gcc $^ -o $@
 
 build/%.o: % | $(addprefix build/,$(dir $(SRCS)))
-	gcc -c $< -o $@ -MD -g -Wall -Werror
+	gcc -c $< -o $@ -MD -g -Wall -Werror -Wmissing-prototypes
 
 %/:
 	mkdir -p $@
