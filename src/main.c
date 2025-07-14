@@ -4,6 +4,7 @@
 #include <errno.h>
 
 #include "options.h"
+#include "compiler.h"
 
 static const char *progname = "bencc";
 
@@ -42,18 +43,10 @@ main(int argc, char **argv) {
         usage();
     }
 
-    FILE *input_file = fopen(argv[c_file_idx], "r");
-    if(!input_file) {
-        printf("Error: Could not open input file '%s': %s\n", argv[c_file_idx], strerror(errno));
-        return 1;
-    }
+    struct compiler compiler;
+    compiler_init(&compiler);
 
-    int next = EOF;
-    while((next = fgetc(input_file)) != EOF) {
-        printf("%c", next);
-    }
-
-    fclose(input_file);
+    compiler_compile_file_path(&compiler, argv[c_file_idx]);
 
     return 0;
 }
