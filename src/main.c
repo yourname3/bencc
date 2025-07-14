@@ -48,5 +48,7 @@ main(int argc, char **argv) {
 
     compiler_compile_file_path(&compiler, argv[c_file_idx]);
 
+    compiler_destroy(&compiler);
+
     return 0;
 }

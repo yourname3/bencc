@@ -8,6 +8,7 @@ struct compiler {
 };
 
 void compiler_init(struct compiler *compiler);
+void compiler_destroy(struct compiler *compiler);
 void compiler_compile_file_path(struct compiler *compiler, const char *path);
 
 #endif
