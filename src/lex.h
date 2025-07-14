@@ -26,7 +26,7 @@ struct token {
 
 struct lexer {
     FILE *input;
-    int next;
+    int peek;
 
     char *buf;
     size_t buf_size;

@@ -46,7 +46,13 @@ main(int argc, char **argv) {
     struct compiler compiler;
     compiler_init(&compiler);
 
-    compiler_compile_file_path(&compiler, argv[c_file_idx]);
+    // If the C file path is '-', use stdin
+    if(!strcmp(argv[c_file_idx], "-")) {
+        compiler_compile_file_handle(&compiler, stdin);
+    }
+    else {
+        compiler_compile_file_path(&compiler, argv[c_file_idx]);
+    }
 
     compiler_destroy(&compiler);
 

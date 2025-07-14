@@ -18,7 +18,7 @@ lex_init(struct lexer *l, FILE *input) {
     if(!l) return;
 
     l->input = input;
-    l->next = ' ';
+    l->peek = ' ';
 
     l->buf_size = 0;
     l->buf_len = 0;
@@ -53,14 +53,11 @@ is_alpha(int c) {
     return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
 }
 
-static void
+static int
 advance(struct lexer *l) {
-    l->next = fgetc(l->input);
-}
-
-static void
-advance_push(struct lexer *l) {
-    advance(l);
+    int curr = l->peek;
+    l->peek = fgetc(l->input);
+    return curr;
 }
 
 static void
@@ -78,31 +75,32 @@ token(struct lexer *l, enum token_type type) {
 
 static struct token
 number(struct lexer *l) {
-    
-    while(is_num(l->next)) {
-        advance_push(l);
+    while(is_num(l->peek)) {
+        advance(l);
     }
     return token(l, T_NUM);
 }
 
 struct token
 lex(struct lexer *l) {
-    while(is_whitespace(l->next)) { advance(l); }
+    while(is_whitespace(l->peek)) { advance(l); }
 
     begin(l);
 
-    if(is_num(l->next)) {
+    int first = advance(l);
+
+    if(is_num(first)) {
         return number(l);
     }
 
-    switch(l->next) {
+    switch(first) {
         case EOF: return token(l, T_EOF);
         case '(': return token(l, T_LPAREN);
         case ')': return token(l, T_RPAREN);
         case '{': return token(l, T_LBRACE);
         case '}': return token(l, T_RBRACE);
         default:
-            error("Invalid token: Unexpected character '%c'.\n", l->next);
+            error("Invalid token: Unexpected character '%c'.\n", first);
     }
 }
 
