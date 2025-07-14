@@ -90,6 +90,14 @@ number(struct lexer *l) {
     return token(l, T_NUM);
 }
 
+static struct token
+identifier(struct lexer *l) {
+    while(is_num(l->peek) || is_alpha(l->peek)) {
+        advance(l);
+    }
+    return token(l, T_ID);
+}
+
 struct token
 lex(struct lexer *l) {
     while(is_whitespace(l->peek)) { advance(l); }
@@ -100,6 +108,10 @@ lex(struct lexer *l) {
 
     if(is_num(first)) {
         return number(l);
+    }
+
+    if(is_alpha(first)) {
+        return identifier(l);
     }
 
     switch(first) {
