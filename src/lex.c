@@ -57,16 +57,25 @@ static int
 advance(struct lexer *l) {
     int curr = l->peek;
     l->peek = fgetc(l->input);
+
+    if(curr >= 0 && curr <= 255) {
+        if(l->buf_len + 2 > l->buf_size) {
+            resize_buffer(l, (l->buf_size ? l->buf_size : 8) * 2);
+        }
+        l->buf[l->buf_len++] = (char)curr;
+    }
+
     return curr;
 }
 
 static void
 begin(struct lexer *l) {
-    l->buf_size = 0;
+    l->buf_len = 0;
 }
 
 static struct token
 token(struct lexer *l, enum token_type type) {
+    l->buf[l->buf_len] = '\0';
     return (struct token){
         .type = type,
         .str = intern(l->buf)
