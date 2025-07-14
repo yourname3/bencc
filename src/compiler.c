@@ -26,7 +26,7 @@ void compiler_compile_file_handle(struct compiler *compiler, FILE *file) {
         if(tok.type == T_EOF) {
             break;
         }
-        printf("'%s'; ", tok.str.in);
+        printf("'%s' (%d); ", tok.str.in, tok.type);
     }
 
     lex_destroy(&lexer);

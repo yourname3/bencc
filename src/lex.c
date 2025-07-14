@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include <stdbool.h>
+#include <string.h>
 
 #include "alloc.h"
 #include "intern.h"
@@ -95,7 +96,43 @@ identifier(struct lexer *l) {
     while(is_num(l->peek) || is_alpha(l->peek)) {
         advance(l);
     }
-    return token(l, T_ID);
+
+    enum token_type ty = T_ID;
+
+    // TEMPORARY:
+    // Set the nul terminator now, because we're using strcmp.
+    l->buf[l->buf_len] = '\0';
+
+    // Trie for computing keyword token types.
+    switch(l->buf[0]) {
+        case 'i':
+            if(l->buf[1] == 'n') {
+                if(!strcmp(l->buf, "int")) {
+                    ty = T_INT;
+                }
+            }
+            break;
+
+        case 'r':
+            if(l->buf[1] == 'e') {
+                // TODO: Replace all these strcmps with comparisons
+                // to interned strings.
+                if(!strcmp(l->buf, "return")) {
+                    ty = T_RETURN;
+                }
+            }
+            break;
+
+        case 'v':
+            if(l->buf[1] == 'o') {
+                if(!strcmp(l->buf, "void")) {
+                    ty = T_VOID;
+                }
+            }
+            break;
+    }
+
+    return token(l, ty);
 }
 
 struct token
