@@ -31,9 +31,9 @@ list_compute_size(size_t wanted, size_t current) {
     } \
 } while(0)
 
-#define list_push(list_ptr, object) do { \
+#define list_push(list_ptr, ...) do { \
     list_reserve_at_least(list_ptr, (list_ptr)->length + 1); \
-    (list_ptr)->at[(list_ptr)->length++] = object; \
+    (list_ptr)->at[(list_ptr)->length++] = (__VA_ARGS__); \
 } while(0)
 
 #define list_foreach(list_ptr, idx) \

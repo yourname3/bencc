@@ -1,4 +1,6 @@
 SRCS= \
+	backend/x86/x86-from.c \
+	backend/x86/x86-text.c \
 	src/compiler.c \
 	src/main.c \
 	src/intern.c \
@@ -10,7 +12,7 @@ bencc: $(SRCS:%=build/%.o)
 	gcc $^ -o $@
 
 build/%.o: % | $(addprefix build/,$(dir $(SRCS)))
-	gcc -c $< -o $@ -MD -g -Wall -Werror -Wmissing-prototypes -Wno-error=unused-function
+	gcc -c $< -o $@ -I. -MD -g -Wall -Werror -Wmissing-prototypes -Wno-error=unused-function
 
 %/:
 	mkdir -p $@

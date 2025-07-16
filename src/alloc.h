@@ -5,6 +5,17 @@
 #include <stdio.h>
 
 static inline void*
+zalloc(size_t new_size) {
+    void *result = calloc(1, new_size);
+    if(!result) {
+        /* TODO: Do we want to longjmp or something? */
+        printf("Error: Compiler ran out of memory\n");
+        exit(-1);
+    }
+    return result;
+}
+
+static inline void*
 reallocate(void *ptr, size_t new_size) {
     void *result = NULL;
     if(!ptr) {

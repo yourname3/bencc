@@ -119,6 +119,7 @@ stmt(struct parser *p) {
 static struct function*
 function(struct parser *p, struct token name) {
     my(struct function*, func);
+    func->name = name.str;
 
     expect(p, T_LPAREN, "'(' after function name");
     expect(p, T_VOID, "parameter list");

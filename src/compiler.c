@@ -8,6 +8,8 @@
 #include "parser.h"
 #include "pretty_print.h"
 
+#include "backend/x86/x86.h"
+
 void
 compiler_init(struct compiler *compiler) {
 
@@ -23,7 +25,10 @@ void compiler_compile_file_handle(struct compiler *compiler, FILE *file) {
     parse_init(&p, file);
 
     struct program *prog = parse(&p);
-    pretty_print(prog);
+
+    //pretty_print(prog);
+    struct x86_program *x86 = compile_to_x86(prog);
+    emit_text_x86(stdout, x86);
 
     parse_destroy(&p);
 }

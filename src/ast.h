@@ -4,6 +4,7 @@
 #include <stdint.h>
 
 #include "list.h"
+#include "intern.h"
 
 struct stmt;
 struct expr;
@@ -37,6 +38,7 @@ struct stmt {
 };
 
 struct function {
+    struct str name;
     list_of(struct stmt*) stmts;
 };
 
