@@ -3,8 +3,6 @@
 
 #include <stdio.h>
 
-#include "lex.h"
-
 struct compiler {
 
 };

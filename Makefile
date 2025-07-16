@@ -3,6 +3,8 @@ SRCS= \
 	src/main.c \
 	src/intern.c \
 	src/lex.c \
+	src/parser.c \
+	src/pretty_print.c
 
 bencc: $(SRCS:%=build/%.o)
 	gcc $^ -o $@

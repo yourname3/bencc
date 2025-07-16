@@ -5,6 +5,8 @@
 #include <errno.h>
 
 #include "error.h"
+#include "parser.h"
+#include "pretty_print.h"
 
 void
 compiler_init(struct compiler *compiler) {
@@ -17,26 +19,20 @@ compiler_destroy(struct compiler *compiler) {
 }
 
 void compiler_compile_file_handle(struct compiler *compiler, FILE *file) {
-    struct lexer lexer;
-    lex_init(&lexer, file);
+    struct parser p;
+    parse_init(&p, file);
 
-    // Initial lexer driver
-    for(;;) {
-        struct token tok = lex(&lexer);
-        if(tok.type == T_EOF) {
-            break;
-        }
-        printf("'%s' (%d); ", tok.str.in, tok.type);
-    }
+    struct program *prog = parse(&p);
+    pretty_print(prog);
 
-    lex_destroy(&lexer);
+    parse_destroy(&p);
 }
 
 void
 compiler_compile_file_path(struct compiler *compiler, const char *path) {
     FILE *the_file = fopen(path, "r");
     if(!the_file) {
-        error("Could not open input file '%s': %s\n", path, strerror(errno));
+        error("Could not open input file '%s': %s", path, strerror(errno));
     }
 
     compiler_compile_file_handle(compiler, the_file);

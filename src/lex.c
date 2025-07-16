@@ -158,7 +158,7 @@ lex(struct lexer *l) {
         case '{': return token(l, T_LBRACE);
         case '}': return token(l, T_RBRACE);
         default:
-            error("Invalid token: Unexpected character '%c'.\n", first);
+            error("Invalid token: Unexpected character '%c'.", first);
     }
 }
 
