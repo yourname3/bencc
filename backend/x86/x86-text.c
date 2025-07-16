@@ -16,7 +16,7 @@ static void
 operand(FILE *out, struct x86_operand *op) {
     switch(op->kind) {
         case K_REG: {
-            fprintf(out, "eax");
+            fprintf(out, "%%eax");
         }
         break;
 
