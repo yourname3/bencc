@@ -37,7 +37,7 @@ static void
 pp_expr(struct pp *pp, struct expr *expr) {
     switch(expr->type) {
         case E_CONSTANT: {
-            printf("constant(%" PRIu64 ")", expr->constant.value);
+            pp_printf(pp, "constant(%" PRIu64 ")\n", expr->constant.value);
         }
         break;
     }
@@ -47,7 +47,7 @@ static void
 pp_stmt(struct pp *pp, struct stmt *stmt) {
     switch(stmt->type) {
         case S_RET: {
-            pp_begin(pp, "return ");
+            pp_begin(pp, "return");
             pp_expr(pp, stmt->ret.value);
             pp_end(pp);
         }

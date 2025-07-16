@@ -29,6 +29,18 @@ eat(struct parser *p, enum token_type ty) {
     return false;
 }
 
+static _Noreturn void
+expected(struct parser *p, const char *fmt, ...) {
+    error_begin("expected ");
+
+    va_list args;
+    va_start(args, fmt);
+    v_error_begin(fmt, args);
+    va_end(args);
+
+    error(", got '%s'", p->peek.str.in);
+}
+
 static struct token
 expect(struct parser *p, enum token_type ty, const char *fmt, ...) {
     struct token tok = p->peek;
@@ -61,6 +73,49 @@ parse_destroy(struct parser* p) {
     lex_destroy(&p->lex);
 }
 
+static struct expr*
+expr(struct parser *p) {
+    my(struct expr*, e);
+
+    switch(p->peek.type) {
+        case T_NUM: {
+            e->constant.value = atoi(p->peek.str.in);
+            e->type = E_CONSTANT;
+            advance(p);
+        }
+        break;
+
+        default: {
+            expected(p, "expression");
+        }
+    }
+
+    return e;
+}
+
+static struct stmt*
+stmt(struct parser *p) {
+    // TODO: How to free these when we encounter errors?
+    my(struct stmt*, s);
+
+    switch(p->peek.type) {
+        case T_RETURN: {
+            advance(p);
+            s->ret.value = expr(p);
+            s->type = S_RET;
+        }
+        break;
+
+        default: {
+            expected(p, "statement");
+        }
+    }
+
+    expect(p, T_SEMICOLON, "';' after statement");
+
+    return s;
+}
+
 static struct function*
 function(struct parser *p, struct token name) {
     my(struct function*, func);
@@ -69,6 +124,9 @@ function(struct parser *p, struct token name) {
     expect(p, T_VOID, "parameter list");
     expect(p, T_RPAREN, "')' after parameter list");
     expect(p, T_LBRACE, "'{' after parameter list");
+    while(!at(p, T_RBRACE) && !at(p, T_EOF)) {
+        list_push(&func->stmts, stmt(p));
+    }
     expect(p, T_RBRACE, "'}' after function body");
 
     return func;

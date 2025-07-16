@@ -16,6 +16,8 @@ enum token_type {
     T_LBRACE,
     T_RBRACE,
 
+    T_SEMICOLON,
+
     T_AUTO,
     T_BREAK,
     T_CASE,
